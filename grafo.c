@@ -31,17 +31,9 @@ Grafo *cria_grafo() {
 }
 
 int adiciona_vertice(Grafo *g, const int id) {
-    if (g) {
-        Vertice *v = g->v;
-        // Verificando se o vértice já existe.
-        while (v) {
-            if (v->id == id) {
-                return 0;
-            }
-            v = v->prox;
-        }
+    if (g && !verifica_vertice(g, id)) {
         // Criando um novo vértice.
-        v = (Vertice *)malloc(sizeof(Vertice));
+        Vertice *v = (Vertice *)malloc(sizeof(Vertice));
         if (!v) {
             return -1;
         }
@@ -55,5 +47,19 @@ int adiciona_vertice(Grafo *g, const int id) {
         g->nVertices++;
         return 1;
     }
+    return 0;
+}
+
+int verifica_vertice(const Grafo *g, const int id) {
+    const Vertice *v = g->v;
+    // Verificando se o vértice já existe.
+    while (v) {
+        if (v->id == id) {
+            // Vértice existe.
+            return 1;
+        }
+        v = v->prox;
+    }
+    // Vértice não existe.
     return 0;
 }
