@@ -29,3 +29,31 @@ Grafo *cria_grafo() {
     g->v = NULL;
     return g;
 }
+
+int adiciona_vertice(Grafo *g, const int id) {
+    if (g) {
+        Vertice *v = g->v;
+        // Verificando se o vértice já existe.
+        while (v) {
+            if (v->id == id) {
+                return 0;
+            }
+            v = v->prox;
+        }
+        // Criando um novo vértice.
+        v = (Vertice *)malloc(sizeof(Vertice));
+        if (!v) {
+            return -1;
+        }
+        // Inicializando valores.
+        v->id = id;
+        v->prox = g->v;
+        v->nAresta = 0;
+        v->a = NULL;
+        // Inserindo no início para a complexidade ser O(1).
+        g->v = v;
+        g->nVertices++;
+        return 1;
+    }
+    return 0;
+}
