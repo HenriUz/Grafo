@@ -35,20 +35,20 @@ Grafo *cria_grafo() {
 /*
 Descrição: função responsável por verificar se um vértice já existe em um grafo.
 Entrada: ponteiro para o grafo, inteiro do id do vértice.
-Saída: 1 - vértice existe, 0 - vértice não existe.
+Saída: ponteiro para o vértice, e nulo caso não exista.
 */
-int verifica_vertice(const Grafo *g, const int id) {
-    const Vertice *v = g->v;
+Vertice *verifica_vertice(const Grafo *g, const int id) {
+    Vertice *v = g->v;
     // Verificando se o vértice já existe.
     while (v) {
         if (v->id == id) {
             // Vértice existe.
-            return 1;
+            return v;
         }
         v = v->prox;
     }
     // Vértice não existe.
-    return 0;
+    return NULL;
 }
 
 int adiciona_vertice(Grafo *g, const int id) {
@@ -66,6 +66,46 @@ int adiciona_vertice(Grafo *g, const int id) {
         // Inserindo no início para a complexidade ser O(1).
         g->v = v;
         g->nVertices++;
+        return 1;
+    }
+    return 0;
+}
+
+/*
+Descrição: função responsável por verificar se uma aresta já existe em um vértice.
+Entrada: ponteiro para o vértice, inteiro do id da aresta.
+Saída: ponteiro para a aresta, e nulo caso não exista.
+*/
+Aresta *verifica_aresta(const Vertice *v, const int id) {
+    Aresta *a = v->a;
+    // Verificando se a aresta já existe.
+    while (a) {
+        if (a->id == id) {
+            // Aresta existe.
+            return a;
+        }
+        a = a->prox;
+    }
+    // Aresta não existe.
+    return NULL;
+}
+
+int adiciona_aresta(const Grafo *g, const int idVertice, const int idAresta, const int idDestino, const float tamanho) {
+    Vertice *v = verifica_vertice(g, idVertice);
+    if (v && !verifica_aresta(v, idAresta)) {
+        // Criando uma nova aresta.
+        Aresta *a = (Aresta *)malloc(sizeof(Aresta));
+        if (!a) {
+            return -1;
+        }
+        // Inicializando valores.
+        a->id = idAresta;
+        a->destino = idDestino;
+        a->tamanho = tamanho;
+        a->prox = v->a;
+        // Inserindo no início para complexidade ser O(1).
+        v->a = a;
+        v->nAresta++;
         return 1;
     }
     return 0;

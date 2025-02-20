@@ -13,10 +13,17 @@ Saída: ponteiro para a estrutura criada.
 Grafo *cria_grafo();
 
 /*
-Descrição: função responsável por criar um vértice e adicionar no grafo.
+Descrição: função responsável por criar e adicionar um vértice ao grafo.
 Entrada: ponteiro para o grafo, inteiro do id do vértice.
 Saída: 1 - sucesso, 0 - vértice já existente ou grafo não existente, −1 - erro na alocação de memória.
 */
 int adiciona_vertice(Grafo *g, int id);
+
+/*
+Descrição: função responsável por criar e adicionar uma aresta ao vértice.
+Entrada: ponteiro para o grafo, inteiro do id do vértice de origem, inteiro do id da aresta, inteiro do id do vértice de destino, ponto flutuante do tamanho da aresta.
+Saída: 1 - sucesso, 0 - vértice ou grafo não existente, ou a aresta já existe, −1 - erro na alocação de memória.
+*/
+int adiciona_aresta(const Grafo *g, int idVertice, int idAresta, int idDestino, float tamanho);
 
 #endif //GRAFO_H
