@@ -26,4 +26,18 @@ Saída: 1 - sucesso, 0 - vértice ou grafo não existente, ou a aresta já exist
 */
 int adiciona_aresta(const Grafo *g, int idVertice, int idAresta, int idDestino, float tamanho);
 
+/*
+Descrição: função responsável por retornar o grau de entrada de um vértice.
+Entrada: ponteiro para o grafo, inteiro do id do vértice.
+Saída: grau de entrada, −1 - vértice não existente.
+*/
+int grau_de_entrada(const Grafo *g, int id);
+
+/*
+Descrição: função responsável por retornar o grau de saída de um vértice.
+Entrada: ponteiro para o grafo, inteiro do id do vértice.
+Saída: grau de saída, −1 - vértice não existente.
+*/
+int grau_de_saida(const Grafo *g, int id);
+
 #endif //GRAFO_H

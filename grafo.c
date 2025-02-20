@@ -110,3 +110,30 @@ int adiciona_aresta(const Grafo *g, const int idVertice, const int idAresta, con
     }
     return 0;
 }
+
+int grau_de_entrada(const Grafo *g, const int id) {
+    int grau = -1;
+    const Vertice *v = g->v;
+    // Percorrendo os vértices.
+    while (v) {
+        if (v->id != id) {
+            // Somando o grau caso a aresta tenha como destino o vértice informado no id.
+            for (const Aresta *a = v->a; a; a = a->prox) {
+                grau += a->destino == id ? 1 : 0;
+            }
+        }
+        v = v->prox;
+    }
+    // Retornando o grau.
+    return grau == -1 ? grau : grau + 1;
+}
+
+int grau_de_saida(const Grafo *g, const int id) {
+    const Vertice *v = g->v;
+    // Buscando o vértice correspondente.
+    while (v && v->id != id) {
+        v = v->prox;
+    }
+    // Retornando o grau.
+    return !v ? -1 : v->nAresta;
+}
