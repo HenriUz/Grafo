@@ -14,8 +14,10 @@ struct Vertice {
 };
 
 struct Aresta {
+    int id; // ID da aresta, útil para identificar arestas paralelas.
     int destino; // ID do vértice de destino.
     float tamanho; // Tamanho da aresta.
+    Aresta *prox; // Próxima aresta na lista.
 };
 
 Grafo *cria_grafo() {
@@ -28,6 +30,25 @@ Grafo *cria_grafo() {
     g->nVertices = 0;
     g->v = NULL;
     return g;
+}
+
+/*
+Descrição: função responsável por verificar se um vértice já existe em um grafo.
+Entrada: ponteiro para o grafo, inteiro do id do vértice.
+Saída: 1 - vértice existe, 0 - vértice não existe.
+*/
+int verifica_vertice(const Grafo *g, const int id) {
+    const Vertice *v = g->v;
+    // Verificando se o vértice já existe.
+    while (v) {
+        if (v->id == id) {
+            // Vértice existe.
+            return 1;
+        }
+        v = v->prox;
+    }
+    // Vértice não existe.
+    return 0;
 }
 
 int adiciona_vertice(Grafo *g, const int id) {
@@ -47,19 +68,5 @@ int adiciona_vertice(Grafo *g, const int id) {
         g->nVertices++;
         return 1;
     }
-    return 0;
-}
-
-int verifica_vertice(const Grafo *g, const int id) {
-    const Vertice *v = g->v;
-    // Verificando se o vértice já existe.
-    while (v) {
-        if (v->id == id) {
-            // Vértice existe.
-            return 1;
-        }
-        v = v->prox;
-    }
-    // Vértice não existe.
     return 0;
 }
