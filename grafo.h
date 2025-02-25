@@ -40,4 +40,11 @@ Saída: grau de saída, −1 - vértice ou grafo não existe.
 */
 int grau_de_saida(const Grafo *g, int id);
 
+/*
+Descrição: função responsável por calcular a densidade do grafo.
+Entrada: ponteiro para o grafo.
+Saída: double da densidade calculada.
+*/
+double densidade(const Grafo *g);
+
 #endif //GRAFO_H

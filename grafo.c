@@ -149,3 +149,17 @@ int grau_de_saida(const Grafo *g, const int id) {
     // Retornando o grau.
     return !v ? -1 : v->nAresta;
 }
+
+double densidade(const Grafo *g) {
+    int arestas = 0;
+    double densidade = 0;
+    if (g) {
+        // Calculando a quantidade total de arestas.
+        for (const Vertice *v = g->v; v; v = v->prox) {
+            arestas += v->nAresta;
+        }
+        // Calculando a densidade.
+        densidade = (double)arestas / (g->nVertices * (g->nVertices - 1));
+    }
+    return densidade;
+}
