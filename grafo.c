@@ -20,7 +20,7 @@ struct Aresta {
     Vertice *destino; // Vértice de destino.
 };
 
-Grafo *cria_grafo() {
+Grafo *criar_grafo() {
     Grafo *g = (Grafo *)malloc(sizeof(Grafo));
     // Verificando se o chunk foi alocado corretamente.
     if (!g) {
@@ -37,20 +37,18 @@ Descrição: função responsável por verificar se um vértice já existe em um
 Entrada: ponteiro para o grafo, inteiro do id do vértice.
 Saída: ponteiro para o vértice, e nulo caso não exista.
 */
-Vertice *verifica_vertice(const Grafo *g, const int id) {
+Vertice *verificar_vertice(const Grafo *g, const int id) {
     // Verificando se o vértice já existe.
     for (Vertice *v = g->v; v; v = v->prox) {
         if (v->id == id) {
-            // Vértice existe.
             return v;
         }
     }
-    // Vértice não existe.
     return NULL;
 }
 
-int adiciona_vertice(Grafo *g, const int id) {
-    if (g && !verifica_vertice(g, id)) {
+int adicionar_vertice(Grafo *g, const int id) {
+    if (g && !verificar_vertice(g, id)) {
         // Criando um novo vértice.
         Vertice *v = (Vertice *)malloc(sizeof(Vertice));
         if (!v) {
@@ -69,51 +67,125 @@ int adiciona_vertice(Grafo *g, const int id) {
     return 0;
 }
 
+int remover_vertice(Grafo *g, const int id) {
+    if (g) {
+        // Percorrendo os vértices do grafo.
+        Vertice *vElemento = NULL, *vAnterior = NULL; // O primeiro é um ponteiro para o vértice que será removido, e o segundo é um ponteiro para o vértice anterior.
+        for (Vertice *v = g->v; v; v = v->prox) {
+            if (v->id == id) {
+                vElemento = v;
+            }else if (!vElemento) {
+                vAnterior = v;
+            }
+            // Percorrendo as arestas.
+            Aresta *a = v->a, *aAnterior = NULL; // O primeiro é um ponteiro que irá percorrer as arestas, e o segundo é um ponteiro para a aresta anterior da que será removida.
+            while (a) {
+                // Caso o destino seja o vértice que será removido, remove a aresta.
+                if (a->destino->id == id) {
+                    Aresta *aElemento = a; // Aresta que será removida.
+                    if (aAnterior) {
+                        aAnterior->prox = a->prox;
+                    }else {
+                        v->a = a->prox;
+                    }
+                    a = a->prox;
+                    v->nAresta--;
+                    free(aElemento);
+                }else {
+                    aAnterior = a;
+                    a = a->prox;
+                }
+            }
+        }
+        // Caso o vértice tenha sido encontrado, remove ele.
+        if (vElemento) {
+            if (vAnterior) {
+                vAnterior->prox = vElemento->prox;
+            }else {
+                g->v = vElemento->prox;
+            }
+            g->nVertices--;
+            free(vElemento);
+            return 1;
+        }
+        return -1;
+    }
+    return 0;
+}
+
 /*
 Descrição: função responsável por verificar se uma aresta já existe em um vértice.
 Entrada: ponteiro para o vértice, inteiro do id da aresta.
 Saída: ponteiro para a aresta, e nulo caso não exista.
 */
-Aresta *verifica_aresta(const Vertice *v, const int id) {
+Aresta *verificar_aresta(const Vertice *v, const int id) {
     // Verificando se a aresta já existe.
     for (Aresta *a = v->a; a; a = a->prox) {
         if (a->id == id) {
-            // Aresta existe.
             return a;
         }
     }
-    // Aresta não existe.
     return NULL;
 }
 
-int adiciona_aresta(const Grafo *g, const int idOrigem, const int idDestino, const int idAresta, const float tamanho) {
-    Vertice *origem = NULL, *destino = NULL;
-    // Buscando os vértices (sem usar a verifica_vertice para buscar os dois em um único loop).
-    for (Vertice *v = g->v; v; v = v->prox) {
-        // 2 ifs para identificar laço.
-        if (v->id == idOrigem) {
-            origem = v;
+int adicionar_aresta(const Grafo *g, const int idOrigem, const int idDestino, const int idAresta, const float tamanho) {
+    if (g) {
+        Vertice *origem = NULL, *destino = NULL;
+        // Buscando os vértices (sem usar a verifica_vertice para buscar os dois em um único loop).
+        for (Vertice *v = g->v; v; v = v->prox) {
+            // 2 ifs para identificar laço.
+            if (v->id == idOrigem) {
+                origem = v;
+            }
+            if (v->id == idDestino) {
+                destino = v;
+            }
         }
-        if (v->id == idDestino) {
-            destino = v;
+        // Verificando se a aresta pode ser inserida (vértices existem, e a aresta ainda não existe).
+        if (origem && destino && !verificar_aresta(origem, idAresta)) {
+            // Criando uma nova aresta.
+            Aresta *a = (Aresta *)malloc(sizeof(Aresta));
+            if (!a) {
+                return -1;
+            }
+            // Inicializando valores.
+            a->id = idAresta;
+            a->tamanho = tamanho;
+            a->prox = origem->a;
+            a->destino = destino;
+            // Inserindo no início para complexidade ser O(1).
+            origem->nAresta++;
+            origem->a = a;
+            return 1;
         }
     }
-    // Verificando se a aresta pode ser inserida (vértices existem, e a aresta ainda não existe).
-    if (origem && destino && !verifica_aresta(origem, idAresta)) {
-        // Criando uma nova aresta.
-        Aresta *a = (Aresta *)malloc(sizeof(Aresta));
-        if (!a) {
-            return -1;
+    return 0;
+}
+
+int remover_aresta(const Grafo *g, const int idVertice, const int idAresta) {
+    if (g) {
+        // Buscando o vértice.
+        Vertice *v = verificar_vertice(g, idVertice);
+        if (v) {
+            // Buscando a aresta.
+            Aresta *a = v->a, *anterior = NULL;
+            while (a && a->id != idAresta) {
+                anterior = a;
+                a = a->prox;
+            }
+            // Caso a aresta tenha sido encontrada, remove ela.
+            if (a) {
+                if (anterior) {
+                    anterior->prox = a->prox;
+                }else {
+                    v->a = a->prox;
+                }
+                v->nAresta--;
+                free(a);
+                return 1;
+            }
         }
-        // Inicializando valores.
-        a->id = idAresta;
-        a->tamanho = tamanho;
-        a->prox = origem->a;
-        a->destino = destino;
-        // Inserindo no início para complexidade ser O(1).
-        origem->nAresta++;
-        origem->a = a;
-        return 1;
+        return -1;
     }
     return 0;
 }
@@ -138,23 +210,16 @@ int grau_de_entrada(const Grafo *g, const int id) {
 }
 
 int grau_de_saida(const Grafo *g, const int id) {
-    const Vertice *v = NULL;
-    if (g) {
-        v = g->v;
-        // Buscando o vértice correspondente.
-        while (v && v->id != id) {
-            v = v->prox;
-        }
-    }
+    const Vertice *v = g ? verificar_vertice(g, id) : NULL;
     // Retornando o grau.
     return !v ? -1 : v->nAresta;
 }
 
 double densidade(const Grafo *g) {
-    int arestas = 0;
     double densidade = 0;
     if (g) {
         // Calculando a quantidade total de arestas.
+        int arestas = 0;
         for (const Vertice *v = g->v; v; v = v->prox) {
             arestas += v->nAresta;
         }
