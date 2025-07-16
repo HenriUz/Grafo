@@ -72,7 +72,7 @@ int adicionar_vertice(Grafo *g, const int id) {
         v->nAresta = 0;
         v->a = NULL;
         v->prox = g->v;
-        // Inserindo no início para a complexidade ser O(1).
+        // Inserindo na lista de vértices.
         g->nVertices++;
         g->v = v;
         return 1;
@@ -93,8 +93,8 @@ int remover_vertice(Grafo *g, const int id) {
             // Percorrendo as arestas.
             Aresta *a = v->a, *aAnterior = NULL;        // a é um ponteiro que irá percorrer a lista de arestas, e aAnterior aponta para a aresta anterior na lista.
             while (a) {
-                // Caso o destino seja o vértice que será removido, remove a aresta.
-                if (a->destino->id == id) {
+                // Remove a aresta caso o destino seja o vértice informado, ou caso o vértice atual seja o informado.
+                if (a->destino->id == id || v->id == id) {
                     Aresta *aElemento = a;              // Ponteiro para a aresta que será removida.
                     if (aAnterior) {
                         aAnterior->prox = a->prox;
@@ -171,7 +171,7 @@ int adicionar_aresta(const Grafo *g, const int idOrigem, const int idDestino, co
             a->tamanho = tamanho;
             a->prox = origem->a;
             a->destino = destino;
-            // Inserindo no início para complexidade ser O(1).
+            // Inserindo na lista de arestas.
             origem->nAresta++;
             origem->a = a;
             return 1;
@@ -191,7 +191,7 @@ int remover_aresta(const Grafo *g, const int idVertice, const int idAresta) {
                 anterior = a;
                 a = a->prox;
             }
-            // Caso a aresta tenha sido encontrada, remove ela.
+            // Remove a aresta caso ela exista.
             if (a) {
                 if (anterior) {
                     anterior->prox = a->prox;
