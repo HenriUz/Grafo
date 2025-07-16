@@ -1,23 +1,31 @@
+/**
+ * @file grafo.c
+ *
+ * @brief Implementação das funções para manipulação de grafos dirigidos (dígrafos), além de implementar funções auxiliares.
+ *
+ * @author HenriUz
+ */
+
 #include <stdlib.h>
 #include "grafo.h"
 
 struct Grafo {
-    int nVertices; // Quantidade de vértices.
-    Vertice *v; // Vértices do grafo.
+    int nVertices;      /**< Quantidade de vértices. */
+    Vertice *v;         /**< Vértice inicial da lista encadeada de vértices. */
 };
 
 struct Vertice {
-    int id; // ID do vértice.
-    int nAresta; // Quantidade de arestas.
-    Aresta *a; // Arestas do vértice.
-    Vertice *prox; // Próximo vértice na lista.
+    int id;             /**< ID do vértice. */
+    int nAresta;        /**< Quantidade de arestas incidentes do vértice. */
+    Aresta *a;          /**< Aresta inicial da lista encadeada de arestas. */
+    Vertice *prox;      /**< Próximo vértice na lista. */
 };
 
 struct Aresta {
-    int id; // ID da aresta, útil para identificar arestas paralelas.
-    float tamanho; // Tamanho da aresta.
-    Aresta *prox; // Próxima aresta na lista.
-    Vertice *destino; // Vértice de destino.
+    int id;             /**< ID da aresta, útil para identificar arestas paralelas. */
+    float tamanho;      /**< Peso da aresta. */
+    Aresta *prox;       /**< Próxima aresta na lista. */
+    Vertice *destino;   /**< Vértice de destino. */
 };
 
 Grafo *criar_grafo() {
@@ -32,11 +40,16 @@ Grafo *criar_grafo() {
     return g;
 }
 
-/*
-Descrição: função responsável por verificar se um vértice já existe em um grafo.
-Entrada: ponteiro para o grafo, inteiro do id do vértice.
-Saída: ponteiro para o vértice, e nulo caso não exista.
-*/
+/**
+ * @brief Função de verificação de vértices.
+ *
+ * Verifica se o vértice especificado existe no grafo informado.
+ *
+ * @param g Ponteiro para o grafo.
+ * @param id Inteiro identificador do vértice.
+ * @retval v Ponteiro para o vértice.
+ * @retval NULL Valor nulo se o vértice não existe.
+ */
 Vertice *verificar_vertice(const Grafo *g, const int id) {
     // Verificando se o vértice já existe.
     for (Vertice *v = g->v; v; v = v->prox) {
@@ -70,7 +83,7 @@ int adicionar_vertice(Grafo *g, const int id) {
 int remover_vertice(Grafo *g, const int id) {
     if (g) {
         // Percorrendo os vértices do grafo.
-        Vertice *vElemento = NULL, *vAnterior = NULL; // O primeiro é um ponteiro para o vértice que será removido, e o segundo é um ponteiro para o vértice anterior.
+        Vertice *vElemento = NULL, *vAnterior = NULL;   // vElemento aponta para o vértice que será removido, e vAnterior aponta para o vértice anterior na lista.
         for (Vertice *v = g->v; v; v = v->prox) {
             if (v->id == id) {
                 vElemento = v;
@@ -78,11 +91,11 @@ int remover_vertice(Grafo *g, const int id) {
                 vAnterior = v;
             }
             // Percorrendo as arestas.
-            Aresta *a = v->a, *aAnterior = NULL; // O primeiro é um ponteiro que irá percorrer as arestas, e o segundo é um ponteiro para a aresta anterior da que será removida.
+            Aresta *a = v->a, *aAnterior = NULL;        // a é um ponteiro que irá percorrer a lista de arestas, e aAnterior aponta para a aresta anterior na lista.
             while (a) {
                 // Caso o destino seja o vértice que será removido, remove a aresta.
                 if (a->destino->id == id) {
-                    Aresta *aElemento = a; // Aresta que será removida.
+                    Aresta *aElemento = a;              // Ponteiro para a aresta que será removida.
                     if (aAnterior) {
                         aAnterior->prox = a->prox;
                     }else {
@@ -113,11 +126,16 @@ int remover_vertice(Grafo *g, const int id) {
     return 0;
 }
 
-/*
-Descrição: função responsável por verificar se uma aresta já existe em um vértice.
-Entrada: ponteiro para o vértice, inteiro do id da aresta.
-Saída: ponteiro para a aresta, e nulo caso não exista.
-*/
+/**
+ * @brief Função de verificação de arestas.
+ *
+ * Verifica se a aresta especificada existe no vértice informado.
+ *
+ * @param v Ponteiro para o vértice.
+ * @param id Inteiro identificador da aresta.
+ * @retval a Ponteiro para a aresta.
+ * @retval NULL Valor nulo se a aresta não existe.
+ */
 Aresta *verificar_aresta(const Vertice *v, const int id) {
     // Verificando se a aresta já existe.
     for (Aresta *a = v->a; a; a = a->prox) {
