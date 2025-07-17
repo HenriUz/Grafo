@@ -23,7 +23,7 @@ typedef struct Grafo Grafo;
  *
  * @brief Representa um vértice contendo um identificador, o número de arestas, e as arestas.
  *
- * O número de arestas representa a quantidade de arestas incidentes do vértice, ou seja, seu grau de saída, e as arestas são manipuladas em forma de lista encadeada, com inserção no início da lista.
+ * O número de arestas representa a quantidade de arestas incidentes a partir do vértice, ou seja, seu grau de saída, e as arestas são manipuladas em forma de lista encadeada, com inserção no início da lista.
  */
 typedef struct Vertice Vertice;
 
@@ -43,6 +43,14 @@ typedef struct Aresta Aresta;
  * @retval NULL Valor nulo se a alocação falhou.
  */
 Grafo *criar_grafo();
+
+/**
+ * @brief Retorna o número de vértices no grafo.
+ *
+ * @param g Ponteiro para o grafo.
+ * @retval nVertices Número de vértices no grafo.
+ */
+int vertices(const Grafo *g);
 
 /**
  * @brief Função de inserção de vértices.
@@ -103,7 +111,7 @@ int remover_aresta(const Grafo *g, int idVertice, int idAresta);
 /**
  * @brief Função de cálculo do grau de entrada.
  *
- * Calcula o grau de entrada do vértice, ou seja, o número de arestas que são incidentes a esse vértice.
+ * Calcula o grau de entrada do vértice, ou seja, o número de arestas que são incidentes nesse vértice.
  *
  * @param g Ponteiro para o grafo.
  * @param id Inteiro identificador do vértice.
@@ -115,7 +123,7 @@ int grau_de_entrada(const Grafo *g, int id);
 /**
  * @brief Função de cálculo do grau de saída.
  *
- * Calcula o grau de saída do vértice, ou seja, o número de arestas que são incidentes desse vértice.
+ * Calcula o grau de saída do vértice, ou seja, o número de arestas que são incidentes a partir desse vértice.
  *
  * @param g Ponteiro para o grafo.
  * @param id Inteiro identificador do vértice.

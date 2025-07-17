@@ -16,7 +16,7 @@ struct Grafo {
 
 struct Vertice {
     int id;             /**< ID do vértice. */
-    int nAresta;        /**< Quantidade de arestas incidentes do vértice. */
+    int nAresta;        /**< Quantidade de arestas incidentes a partir do vértice. */
     Aresta *a;          /**< Aresta inicial da lista encadeada de arestas. */
     Vertice *prox;      /**< Próximo vértice na lista. */
 };
@@ -58,6 +58,10 @@ Vertice *verificar_vertice(const Grafo *g, const int id) {
         }
     }
     return NULL;
+}
+
+int vertices(const Grafo *g) {
+    return !g ? 0 : g->nVertices;
 }
 
 int adicionar_vertice(Grafo *g, const int id) {
